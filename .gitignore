@@ -8,6 +8,8 @@ __pycache__
 output_*.csv
 output_*.yaml
 config.yaml
+cmd*.yaml
+o*.yaml
 
 a.html
 x.py
