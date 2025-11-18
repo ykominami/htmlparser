@@ -1,3 +1,4 @@
+from typing import Dict
 class Progress:
   def __init__(self, meter_str: str, valuemin: str, valuemax: str, valuenow: str):
     self.meter_str = meter_str
@@ -6,7 +7,7 @@ class Progress:
     self.valuenow = valuenow
     self.meter = f'{self.valuemin}-{self.valuemax}-{self.valuenow}'
 
-  def to_dict(self) -> dict:
+  def to_dict(self) -> Dict[str, str]:
     """YAML形式に変換可能な辞書を返す"""
     return {
       'meter_str': self.meter_str,

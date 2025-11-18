@@ -66,6 +66,8 @@ class Env:
         if self.config is None:
           return []
         else:
+          print(f"Env get_files self.config={self.config}")
+          print(f"Env get_files self.config['dir']={self.config['dir']}")
           dir_path = self.base_path / Path(*self.config['dir'])
           
           if self.config['kind'] == 'file':

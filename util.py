@@ -1,8 +1,11 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Sequence
+import csv
+from io import StringIO
 import yaml
 
 class Util:
+  @classmethod
   def flatten(cls, items):
       """ネストしたリストを平坦化する"""
       flat_list = []
@@ -25,6 +28,7 @@ class Util:
       Returns:
           読み込んだYAMLの内容を表す辞書
       """
+      data = None
       with open(input_path, 'r', encoding='utf-8') as f:
           data = yaml.load(f, Loader=yaml.FullLoader)
       return data
@@ -50,18 +54,108 @@ class Util:
       
       return yaml_str
 
+  @classmethod
+  def load_tsv(cls, input_path: Path, fieldnames: Optional[Sequence[str]] = None) -> list[dict]:
+      """
+      タブ区切りファイルを読み込み、連想配列（辞書）のリストを返す
+
+      Args:
+          input_path: 読み込むTSVファイルのパス
+          fieldnames: ヘッダーを明示的に指定する場合に使用。Noneの場合は1行目をヘッダーとして扱う
+
+      Returns:
+          行ごとの辞書を格納したリスト
+      """
+      records = []
+      with open(input_path, 'r', encoding='utf-8', newline='') as f:
+          reader = csv.reader(f, delimiter='\t')
+          headers = list(fieldnames) if fieldnames is not None else None
+
+          for row in reader:
+              if headers is None:
+                  headers = row
+                  continue
+              record = {key: value for key, value in zip(headers, row)}
+              records.append(record)
+
+      if headers is None:
+          raise ValueError("ヘッダー行が存在しません。fieldnamesを指定してください。")
+
+      return records
+
+  @classmethod
+  def output_tsv(
+      cls,
+      records: Sequence[dict],
+      output_path: Optional[Path] = None,
+      fieldnames: Optional[Sequence[str]] = None
+  ) -> str:
+      """
+      連想配列（辞書）のリストをTSV形式で出力する
+
+      Args:
+          records: 1行分のデータを表す辞書のシーケンス
+          output_path: 出力先パス。Noneの場合は文字列として返す
+          fieldnames: ヘッダーを明示的に指定する場合に使用。Noneの場合はrecordsの先頭要素のキーを使用
+
+      Returns:
+          TSV形式の文字列
+      """
+      if not records and fieldnames is None:
+          raise ValueError("fieldnamesを指定するか、recordsに1件以上のデータを含めてください。")
+
+      headers = list(fieldnames) if fieldnames is not None else list(records[0].keys())
+
+      buffer = StringIO()
+      writer = csv.writer(buffer, delimiter='\t', lineterminator='\n')
+      writer.writerow(headers)
+      for record in records:
+          row = [record.get(header, "") for header in headers]
+          writer.writerow(row)
+
+      tsv_str = buffer.getvalue()
+
+      if output_path is not None:
+          with open(output_path, 'w', encoding='utf-8', newline='') as f:
+              f.write(tsv_str)
+
+      return tsv_str
+
+  def test_yaml(self):
+    input_path = Path('output_2.yaml')
+    input_path_2 = Path('output_udemy_3.yaml')
+    output_path = Path('output_4.yaml')
+    dict = Util.load_yaml(input_path)
+    dict_2 = Util.load_yaml(input_path_2)
+
+    for key_2, value_2 in dict_2.items():
+        value_2['Time'] = '0時間'
+        if key_2 in dict.keys():
+            value = dict[key_2]
+            if 'Time' in value.keys():
+                value_2['Time'] = value['Time']
+        else:
+            value_2['Time'] = '0時間'
+
+    Util.output_yaml(dict_2, output_path)
+  def test_tsv(self):
+    input_path = Path('output_2.tsv')
+    input_path_2 = Path('output_udemy_3.tsv')
+    output_path = Path('output_4.tsv')
+    dict = Util.load_tsv(input_path)
+    dict_2 = Util.load_tsv(input_path_2)
+    for record_2 in dict_2:
+        record_2['Time'] = '0時間'
+        if record_2['Course_ID'] in dict.keys():
+            record = dict[record_2['Course_ID']]
+            if 'Time' in record.keys():
+                record_2['Time'] = record['Time']
+        else:
+            record_2['Time'] = '0時間'
+    Util.output_tsv(dict_2, output_path)
+
 if __name__ == "__main__":
-  input_path = Path('output_2.yaml')
-  input_path_2 = Path('output_3.yaml')
-  output_path = Path('output_4.yaml')
-  dict = Util.load_yaml(input_path)
-  dict_2 = Util.load_yaml(input_path_2)
-
-  for key_2, value_2 in dict_2.items():
-    value_2['Time'] = '0時間'
-    if key_2 in dict.keys():
-      value = dict[key_2]
-      if 'Time' in value.keys():
-        value_2['Time'] = value['Time']
-
-  Util.output_yaml(dict_2, output_path)
+    test_util = Util()
+    # test_util.test_yaml()
+    test_util.test_tsv()
+    
