@@ -22,23 +22,4 @@ class KUScraper(Scraper):
 
     return self.links_list
 
-  def _extract_links_from_info(self,info: Info) -> List[Dict[str, str]]:
-    super()._extract_links_from_info(info)
-    links_list = self.scrape(info)
-    return links_list
 
-
-  def get_links_from_html(self, file_path: Path) -> List[Dict[str, str]]:
-      """
-      """
-      print(f'get_links_from_html file_path.name={file_path.name}')
-      links = []
-      if not file_path in self.info.keys():
-          soup = self._parse_html_file(file_path)
-          # print(f'soup={soup}')
-          if soup:
-              info = Info(file_path, file_path.name, soup, 0, 0)
-              self.info[file_path.name] = info
-              links = self._extract_links_from_info(info)
-      # print(f'soup={soup}')
-      return links

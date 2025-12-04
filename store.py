@@ -5,6 +5,11 @@ from util import Util
 
 class Store:
   def __init__(self):
+    """Hold merged YAML associations for CLI usage.
+
+    Returns:
+      None
+    """
     self.assoc = {}
 
 

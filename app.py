@@ -20,11 +20,19 @@ class App:
     """
     
     def __init__(self):
-        """Appクラスの初期化"""
+        """Initialize the application state and prepare storage for results.
+
+        Returns:
+            None
+        """
         self._setup()
     
     def _setup(self):
-        """Appクラスの初期化"""
+        """Reset link buffers, metadata, and counters for a fresh run.
+
+        Returns:
+            None
+        """
         self.links_list = []
         self.links_assoc = {}
         self.info = {}
@@ -32,6 +40,15 @@ class App:
         self.no_append_count = 0
         
     def create_scraper(self, mode: str) -> Scraper:
+        """Build the appropriate scraper implementation for the requested mode.
+
+        Args:
+            mode (str): Logical identifier such as ``"udemy"`` or ``"h3"``.
+
+        Returns:
+            Scraper: Concrete scraper that knows how to parse the given site, or
+            ``None`` when the mode is unsupported.
+        """
         if mode == "udemy":
             return UdemyScraper()
             # return H3Scraper()
@@ -46,6 +63,15 @@ class App:
             return None
 
     def loop(self, files: List[Path], mode: str):
+        """Iterate through HTML files and accumulate extracted link metadata.
+
+        Args:
+            files (List[Path]): Collection of HTML paths to inspect.
+            mode (str): Scraper mode passed through to :meth:`create_scraper`.
+
+        Returns:
+            dict: Mapping of link identifiers to their structured attributes.
+        """
         assoc = {}
         for file in files:
             print(f'file={file}')
@@ -62,16 +88,41 @@ class App:
         return assoc
 
     def output_link_assoc_in_yaml(self, output_path: Path = None) -> str:
-        self.output_yaml(self.links_assoc, output_path)
+        """Persist the in-memory link dictionary as a YAML document.
+
+        Args:
+            output_path (Path | None): Destination file. When ``None`` the YAML
+                string is simply returned.
+
+        Returns:
+            str: YAML dump created by :meth:`output_yaml`.
+        """
+        return self.output_yaml(self.links_assoc, output_path)
 
     def output_yaml(self, assoc: dict, output_path: Path = None) -> str:
-        return Util.output_yaml(self.links_assoc, output_path)
+        """Serialize the provided mapping into YAML and optionally save it.
+
+        Args:
+            assoc (dict): Data to convert into YAML.
+            output_path (Path | None): Optional destination file.
+
+        Returns:
+            str: YAML string produced by :class:`Util`.
+        """
+        return Util.output_yaml(assoc, output_path)
 
     def run(self, env: Env):
+        """Fetch file paths from the environment and scrape each one.
+
+        Args:
+            env (Env): Environment descriptor that supplies file lists and mode.
+
+        Returns:
+            None
+        """
         path_array = env.get_files()
         mode = env.mode()
  
-        """アプリケーションのメイン実行メソッド"""
         assoc = self.loop(path_array, mode)
         print(f'app.py run len( assoc )={ len(assoc) }')
         # self.links_assoc = self.links_assoc.update(list)
@@ -79,6 +130,15 @@ class App:
         print(f'app.py run len( self.links_assoc )={ len(self.links_assoc) }')
 
     def find_item_ancestors(self, items: List[Dict[str, any]]):
+        """Traverse ancestor chains for the supplied elements and log details.
+
+        Args:
+            items (List[Dict[str, any]]): Result set (e.g., BeautifulSoup nodes)
+                whose parent hierarchy should be inspected.
+
+        Returns:
+            list: Currently an empty list placeholder for future aggregation.
+        """
         for i, item in enumerate(items, 1):
             print(f"Status Span {i}: {item.get_text(strip=True)}")
             
@@ -114,7 +174,14 @@ class App:
         return []
 
     def find_status_span_ancestors(self, soup: BeautifulSoup):
-        """role="status"のspanタグの祖先要素をすべて取得する"""
+        """Locate role=\"status\" spans and dump their ancestor structure.
+
+        Args:
+            soup (BeautifulSoup): Parsed HTML document.
+
+        Returns:
+            list: Result from :meth:`find_item_ancestors`.
+        """
         status_spans = soup.find_all('span', role='status')
         return self.find_item_ancestors(status_spans)
 
@@ -135,7 +202,11 @@ if __name__ == "__main__":
         app.links_assoc.update(input_assoc)
 
     for pattern in patterns:
-        env.set_pattern(pattern)
+        print(f'app.py main pattern={pattern}')
+        ret = env.set_pattern(pattern)
+        if ret == None:
+            print(f'Not found pattern={pattern}')
+            exit(0)
         app.run(env)
 
     output_path = Path(output_file)

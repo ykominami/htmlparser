@@ -4,9 +4,22 @@ from typing import List, Dict, Optional
 
 class AScraper(UdemyScraper):
   def __init__(self):
+    """Initialize the Amazon scraper with Udemy defaults.
+
+    Returns:
+      None
+    """
     super().__init__()
 
   def scrape(self, info: Info) -> List[Dict[str, str]]:
+    """Collect course-like links from Amazon-style listings.
+
+    Args:
+      info (Info): Parsed HTML metadata and bookkeeping container.
+
+    Returns:
+      List[Dict[str, str]]: Records appended during this scrape run.
+    """
     print('ascraper scrape')
     soup = info.soup
     append_count = 0
@@ -49,6 +62,14 @@ class AScraper(UdemyScraper):
 
 
   def _extract_links_from_info(self,info: Info) -> List[Dict[str, str]]:
+    """Override Udemy extraction by leveraging :meth:`scrape`.
+
+    Args:
+      info (Info): Parsed HTML payload for the current file.
+
+    Returns:
+      List[Dict[str, str]]: Newly extracted link records.
+    """
     super()._extract_links_from_info(info)
     links_list = self.scrape(info)
 
