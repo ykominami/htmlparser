@@ -7,7 +7,14 @@ import yaml
 class Util:
   @classmethod
   def flatten(cls, items):
-      """ネストしたリストを平坦化する"""
+      """Flatten arbitrarily nested iterables into a single list.
+
+      Args:
+          items (Iterable): Possibly nested lists/tuples of values.
+
+      Returns:
+          list: Flattened sequence preserving order.
+      """
       flat_list = []
       for item in items:
           if isinstance(item, list):
@@ -19,14 +26,13 @@ class Util:
 
   @classmethod
   def load_yaml(cls, input_path: Path) -> dict:
-      """
-      YAMLファイルを読み込んでdictを返す
-      
+      """Load a YAML file and return it as a dictionary.
+
       Args:
-          input_path: 読み込むYAMLファイルのパス
-      
+          input_path (Path): Path to the YAML file.
+
       Returns:
-          読み込んだYAMLの内容を表す辞書
+          dict: Parsed YAML content.
       """
       data = None
       with open(input_path, 'r', encoding='utf-8') as f:
@@ -35,15 +41,15 @@ class Util:
 
   @classmethod
   def output_yaml(cls, assoc: dict, output_path: Optional[Path] = None) -> str:
-      """
-      assoc辞書をYAML形式で出力する
-      
+      """Serialize a dictionary to YAML and optionally write it to disk.
+
       Args:
-          assoc: YAML形式で出力する辞書
-          output_path: 出力先のファイルパス。Noneの場合は文字列として返す
-      
+          assoc (dict): Data to dump.
+          output_path (Path | None): Destination path. When ``None`` the YAML
+              string is merely returned.
+
       Returns:
-          YAML形式の文字列
+          str: YAML representation of ``assoc``.
       """
       yaml_str = yaml.dump(assoc, default_flow_style=False, 
                           allow_unicode=True, sort_keys=False)
@@ -56,15 +62,18 @@ class Util:
 
   @classmethod
   def load_tsv(cls, input_path: Path, fieldnames: Optional[Sequence[str]] = None) -> list[dict]:
-      """
-      タブ区切りファイルを読み込み、連想配列（辞書）のリストを返す
+      """Read a TSV file and convert rows into dictionaries.
 
       Args:
-          input_path: 読み込むTSVファイルのパス
-          fieldnames: ヘッダーを明示的に指定する場合に使用。Noneの場合は1行目をヘッダーとして扱う
+          input_path (Path): TSV file path.
+          fieldnames (Sequence[str] | None): Explicit headers. When ``None`` the
+              first row becomes the header.
 
       Returns:
-          行ごとの辞書を格納したリスト
+          list[dict]: Each row keyed by the header columns.
+
+      Raises:
+          ValueError: If no headers can be determined.
       """
       records = []
       with open(input_path, 'r', encoding='utf-8', newline='') as f:
@@ -90,16 +99,19 @@ class Util:
       output_path: Optional[Path] = None,
       fieldnames: Optional[Sequence[str]] = None
   ) -> str:
-      """
-      連想配列（辞書）のリストをTSV形式で出力する
+      """Write record dictionaries to TSV format.
 
       Args:
-          records: 1行分のデータを表す辞書のシーケンス
-          output_path: 出力先パス。Noneの場合は文字列として返す
-          fieldnames: ヘッダーを明示的に指定する場合に使用。Noneの場合はrecordsの先頭要素のキーを使用
+          records (Sequence[dict]): Rows to emit.
+          output_path (Path | None): Optional destination file.
+          fieldnames (Sequence[str] | None): Header order override; defaults to
+              keys of the first record.
 
       Returns:
-          TSV形式の文字列
+          str: TSV string containing the headers and rows.
+
+      Raises:
+          ValueError: If neither records nor ``fieldnames`` are provided.
       """
       if not records and fieldnames is None:
           raise ValueError("fieldnamesを指定するか、recordsに1件以上のデータを含めてください。")
@@ -122,6 +134,11 @@ class Util:
       return tsv_str
 
   def test_yaml(self):
+    """Developer helper for merging Udemy YAML progress data.
+
+    Returns:
+      None
+    """
     input_path = Path('output_2.yaml')
     input_path_2 = Path('output_udemy_3.yaml')
     output_path = Path('output_4.yaml')
@@ -139,6 +156,11 @@ class Util:
 
     Util.output_yaml(dict_2, output_path)
   def test_tsv(self):
+    """Developer helper for merging Udemy TSV progress data.
+
+    Returns:
+      None
+    """
     input_path = Path('output_2.tsv')
     input_path_2 = Path('output_udemy_3.tsv')
     output_path = Path('output_4.tsv')

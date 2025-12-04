@@ -8,21 +8,36 @@ from pathlib import Path
 
 class UdemyScraper(Scraper):
   def __init__(self):
+    """Initialize Udemy-specific scraper state.
+
+    Returns:
+      None
+    """
     super().__init__()
 
-  def _extract_links_from_info(self,info: Info) -> List[Dict[str, str]]:
-    super()._extract_links_from_info(info)
-    self.links_list = self.scrape(info)
-    # links_list = self.process_for_udemy(info)
-    return self.links_list
-
   def _extract_links_assoc_from_info(self,info: Info) -> List[Dict[str, str]]:
+    """Populate the associative map keyed by course ID.
+
+    Args:
+      info (Info): Parsed HTML payload for a file.
+
+    Returns:
+      dict: ``links_assoc`` containing course records.
+    """
     super()._extract_links_from_info(info)
     self.scrape(info)
     # links_list = self.process_for_udemy(info)
     return self.links_assoc
 
   def scrape(self, info: Info) -> List[Dict[str, str]]:
+    """Extract Udemy dashboard cards and convert them into records.
+
+    Args:
+      info (Info): Parsed HTML container and counters for the current file.
+
+    Returns:
+      List[Dict[str, str]]: List of record dictionaries appended this run.
+    """
     print('udemyscraper scrape')
     soup = info.soup
     append_count = 0
@@ -57,6 +72,15 @@ class UdemyScraper(Scraper):
     return self.links_list
     
   def get_instructors(self, div_tag) -> List[str]:
+    """Pull the instructor text from a course card.
+
+    Args:
+      div_tag (BeautifulSoup): Card container.
+
+    Returns:
+      List[str]: Instructor names (comma-delimited string kept for backward
+      compatibility when not parsed further).
+    """
     instructors = ['_0_']
     child_div = div_tag.find('div', {'data-purpose': 'safely-set-inner-html:course-card:visible-instructors'})
     if child_div is not None:
@@ -65,6 +89,14 @@ class UdemyScraper(Scraper):
     return instructors
 
   def get_course_id_from_url(self, url: str) -> str:
+    """Extract ``course_id`` query parameter from a Udemy URL.
+
+    Args:
+      url (str): Anchor ``href`` attribute.
+
+    Returns:
+      str: Course identifier or empty string when absent.
+    """
     if url and url != '#':
         try:
             parsed_url = urlparse(url)
@@ -76,6 +108,14 @@ class UdemyScraper(Scraper):
     return course_id
 
   def get_progress(self, div_tag: BeautifulSoup) -> Progress:
+      """Convert the progress meter DOM node into a :class:`Progress`.
+
+      Args:
+          div_tag (BeautifulSoup): Course card container element.
+
+      Returns:
+          Progress: Object encapsulating min/max/current values.
+      """
       # meter_div = div_tag.find('div', {'data-purpose': 'meter'})
       meter_div = div_tag.find('div', {'class': 'ud-meter meter-module--meter--9-BwT'})
       
@@ -98,6 +138,18 @@ class UdemyScraper(Scraper):
       return progress
 
   def add_list_and_assoc(self, url: str, text: str, course_id: str, instructors: List[str], progress: Progress) -> bool:
+      """Insert a new record if the ``course_id`` has not been seen.
+
+      Args:
+          url (str): Course URL.
+          text (str): Anchor text/label.
+          course_id (str): Unique identifier.
+          instructors (List[str]): Instructor names.
+          progress (Progress): Progress state per card.
+
+      Returns:
+          bool: ``True`` when the record was added, else ``False``.
+      """
       result = False
       if not course_id in self.links_assoc.keys():
           # instructors = instructors.split(',')
@@ -116,6 +168,21 @@ class UdemyScraper(Scraper):
       return result
 
   def make_record(self, url: str, text: str, course_id: str, instructors: List[str], progress: Progress | Dict) -> Dict[str, str]:
+      """Construct the normalized record stored in outputs.
+
+      Args:
+          url (str): Course URL, must be valid.
+          text (str): Display name.
+          course_id (str): Identifier used as key.
+          instructors (List[str]): Instructor strings.
+          progress (Progress | Dict): Progress object or dict.
+
+      Returns:
+          Dict[str, str]: Record containing URL/Text/Course_ID/Instructors/Progress.
+
+      Raises:
+          ValueError: If the supplied URL lacks a scheme or structure.
+      """
       if isinstance(progress, dict):
           progress_dict = progress
       else:
@@ -136,36 +203,14 @@ class UdemyScraper(Scraper):
 
 
   def get_link_array(self, extracted_links: List[Dict[str, str]]) -> List[Dict[str, str]]:
-      """抽出されたリンクを配列形式に変換する"""
+      """Convert associative link data into a list of records.
+
+      Args:
+          extracted_links (List[Dict[str, str]]): Existing course data.
+
+      Returns:
+          List[Dict[str, str]]: Cloned records via :meth:`make_record`.
+      """
       print(f'###############   get_link_array len(extracted_links)={len(extracted_links)}')
       return [self.make_record(url=link['URL'], text=link['Text'], course_id=link['Course_ID'], instructors=link['Instructors'], progress=link['Progress']) for link in extracted_links]
 
-  def get_links_assoc_from_html(self, file_path: Path) -> List[Dict[str, str]]:
-      """
-      """
-      print(f'get_links_assoc_from_html file_path.name={file_path.name}')
-      assoc = {}
-      if not file_path in self.info.keys():
-          soup = self._parse_html_file(file_path)
-          # print(f'soup={soup}')
-          if soup:
-              info = Info(file_path, file_path.name, soup, 0, 0)
-              self.info[file_path.name] = info
-              assoc = self._extract_links_assoc_from_info(info)
-      # print(f'soup={soup}')
-      return assoc
-
-  def get_links_from_html(self, file_path: Path) -> List[Dict[str, str]]:
-      """
-      """
-      print(f'get_links_from_html file_path.name={file_path.name}')
-      links = []
-      if not file_path in self.info.keys():
-          soup = self._parse_html_file(file_path)
-          # print(f'soup={soup}')
-          if soup:
-              info = Info(file_path, file_path.name, soup, 0, 0)
-              self.info[file_path.name] = info
-              links = self._extract_links_from_info(info)
-      # print(f'soup={soup}')
-      return links
