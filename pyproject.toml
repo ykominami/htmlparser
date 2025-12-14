@@ -1,0 +1,81 @@
+[project]
+name = "htmlparser"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+authors = [
+    { name = "Yasuo Kominami"}
+]
+license = "MIT" # ライセンス
+# 分類の情報
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+]
+
+dependencies = [
+  "yklibpy @ file:///E:/Ccur/python3/yklibpy" 
+]
+
+[build-system]
+# requires = ["uv_build>=0.9.13,<0.10.0"]
+requires = ["hatchling"]
+# build-backend = "uv_build"
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "black>=25.11.0",
+    "build>=1.3.0",
+    "hatch>=1.16.1",
+    "mypy>=1.19.0",
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.7",
+    "twine>=6.2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ykominami/htmlparser"
+Repository = "https://github.com/ykominami/htmlparser"
+
+[project.scripts]
+htmlparser = "yklibpy:app.ymain"
+# tomlop-main = "yklibpy:tomlop.main"
+# yklibpy-main = "yklibpy:main"
+# yklibpy-xmain = "yklibpy:xmain"
+# yklibpy-ymain = "yklibpy:htmlparser.ymain"
+# yklibpy-app = "yklibpy:htmlparser.app.ymain"
+# # yklibpy-tomlop = "yklibpy:tomlop.xmain"
+# yklibpy-zmain = "yklibpy:tomlop.zmain"
+# yklibpy-toml2yaml = "yklibpy:tomlop.toml2yaml"
+# yklibpy-yaml2toml = "yklibpy:tomlop.yaml2toml"
+# yklibpy-serve = "yklibpy_diff:server.main"
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/yklibpy"]
+
+[tool.black]
+line-length = 88
+target-version = ['py314']
+include = '\.pyi?$'
+
+[tool.ruff]
+lint.select = ["E", "F", "I", "N"]
+# line-length = 88
+# line-length = 120
+lint.ignore = ["E501"]
+target-version = "py314"
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+
