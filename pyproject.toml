@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "yklibpy @ file:///E:/Ccur/python3/yklibpy" 
+    "yklibpy",
 ]
 
 [build-system]
@@ -44,7 +44,11 @@ Homepage = "https://github.com/ykominami/htmlparser"
 Repository = "https://github.com/ykominami/htmlparser"
 
 [project.scripts]
-htmlparser = "yklibpy:app.ymain"
+htmlparser = "yklibpy:htmlparser.app.ymain"
+htmlparser-cmain = "htmlparser:cmain"
+htmlparser-bmain = "htmlparser.abc:bmain"
+htmlparser-amain = "htmlparser.__main__:amain"
+
 # tomlop-main = "yklibpy:tomlop.main"
 # yklibpy-main = "yklibpy:main"
 # yklibpy-xmain = "yklibpy:xmain"
@@ -78,4 +82,7 @@ target-version = "py314"
 [tool.mypy]
 python_version = "3.14"
 strict = true
+
+[tool.uv.sources]
+yklibpy = { path = "../yklibpy", editable = true }
 
