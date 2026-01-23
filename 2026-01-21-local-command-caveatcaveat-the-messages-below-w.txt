@@ -1,0 +1,62 @@
+
+╭─── Claude Code v2.1.2 ───────────────────────────────────────────────────────╮
+│                                              │ Tips for getting started      │
+│            Welcome back kominami!            │ Run /init to create a CLAUDE… │
+│                                              │ ───────────────────────────── │
+│                    ▐▛███▜▌                   │ Recent activity               │
+│                   ▝▜█████▛▘                  │ No recent activity            │
+│                     ▘▘ ▝▝                    │                               │
+│                                              │                               │
+│   Sonnet 4.5 · Claude Pro · yasuo kominami   │                               │
+│          E:\Ccur\python3\htmlparser          │                               │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+❯ /compact 
+  ⎿  Error: No messages to compact
+
+❯ /context 
+  ⎿   Context Usage
+     ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁ ⛁   claude-sonnet-4-5-20250929 · 25k/200k tokens (13%)
+     ⛁ ⛁ ⛁ ⛀ ⛀ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ System prompt: 3.9k tokens (1.9%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ System tools: 15.6k tokens (7.8%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ MCP tools: 5.6k tokens (2.8%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Skills: 67 tokens (0.0%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛁ Messages: 113 tokens (0.1%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶   ⛶ Free space: 130k (64.9%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛶ ⛝ ⛝ ⛝   ⛝ Autocompact buffer: 45.0k tokens (22.5%)
+     ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ 
+     ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ ⛝ 
+
+     MCP tools · /mcp
+     └ mcp__claude-in-chrome__javascript_tool: 302 tokens
+     └ mcp__claude-in-chrome__read_page: 337 tokens
+     └ mcp__claude-in-chrome__find: 254 tokens
+     └ mcp__claude-in-chrome__form_input: 237 tokens
+     └ mcp__claude-in-chrome__computer: 1.3k tokens
+     └ mcp__claude-in-chrome__navigate: 188 tokens
+     └ mcp__claude-in-chrome__resize_window: 193 tokens
+     └ mcp__claude-in-chrome__gif_creator: 639 tokens
+     └ mcp__claude-in-chrome__upload_image: 350 tokens
+     └ mcp__claude-in-chrome__get_page_text: 161 tokens
+     └ mcp__claude-in-chrome__tabs_context_mcp: 198 tokens
+     └ mcp__claude-in-chrome__tabs_create_mcp: 96 tokens
+     └ mcp__claude-in-chrome__update_plan: 218 tokens
+     └ mcp__claude-in-chrome__read_console_messages: 387 tokens
+     └ mcp__claude-in-chrome__read_network_requests: 328 tokens
+     └ mcp__claude-in-chrome__shortcuts_list: 141 tokens
+     └ mcp__claude-in-chrome__shortcuts_execute: 227 tokens
+
+     Skills and slash commands · /skills
+
+     Plugin
+     └ frontend-design: 67 tokens
+
+
+❯ /skills 
+  ⎿  Skills dialog dismissed
+
+❯ /doctor 
+  ⎿  Claude Code diagnostics dismissed
+
+
+
