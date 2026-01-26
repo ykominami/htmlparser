@@ -27,7 +27,7 @@ class TopConfigDb:
       self.env = Env(self.config_file_path)
       # raise Exception(f"env:__init__ self.config_file_path={self.config_file_path}")
 
-  def get_env(self) -> Env:
+  def get_env(self) -> Env | None:
     return self.env
 
   def get_patterns(self) -> List[str]:
