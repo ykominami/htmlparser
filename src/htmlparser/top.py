@@ -4,9 +4,10 @@ from typing import Any, NamedTuple
 
 from yklibpy.common.util_yaml import UtilYaml
 from yklibpy.db import get_or_create_db
-from yklibpy.htmlparser import App, Preparex
+from yklibpy.htmlparser import Preparex
 
-from .topconfigdb import TopConfigDb
+from htmlparser.subapp import Subapp
+from htmlparser.topconfigdb import TopConfigDb
 
 
 class ConfigFileInfo(NamedTuple):
@@ -26,8 +27,9 @@ class Top:
         self.db = get_or_create_db(self.db_kind, self.db_file_path)
 
     def db_loadx(self) -> None:
-        tag  = 'tag:yaml.org,2002:python/object:yklibpy.htmlparser.amazonsavedcartscraper.WorkInfo'
-        tags = [tag]
+        tag  = 'tag:yaml.org,2002:python/object:htmlparser.amazonsavedcartscraper.WorkInfo'
+        tag2 = 'tag:yaml.org,2002:python/object:htmlparser.fanzadoujinbasketscraper.WorkInfo'
+        tags = [tag, tag2]
         self.db.load(tags=tags)
 
     def db_load(self, tags:list[Any]=[]) -> None:
@@ -72,18 +74,19 @@ def amain() -> None:
     top.db_loadx()
     db_assoc = top.db.get_data()
 
-    app = App()
+    app = Subapp()
     app.links_assoc.update(db_assoc)
     print(f'len(app.links_assoc)={ len(app.links_assoc) }')
     patterns = top.top_config.get_patterns()
     for pattern in patterns:
         env = top.top_config.get_env()
-        ret = env.set_pattern(pattern)
-        if ret is None:
-            mes = f'invalid result ret={ret} pattern={pattern}'
-            raise ValueError(mes)
-        # print(f'env={env}')
-        app.run(env)
+        if env is not None:
+            ret = env.set_pattern(pattern)
+            if ret is None:
+                mes = f'invalid result ret={ret} pattern={pattern}'
+                raise ValueError(mes)
+            # print(f'env={env}')
+            app.run(env)
 
     # app.links_assoc.update(db_assoc)
     top.db.set_data(app.links_assoc)
@@ -107,7 +110,7 @@ def count() -> int:
     top.db_loadx()
     db_assoc = top.db.get_data()
 
-    app = App()
+    app = Subapp()
     app.links_assoc.update(db_assoc)
     print(f'len(app.links_assoc)={ len(app.links_assoc) }')
 
