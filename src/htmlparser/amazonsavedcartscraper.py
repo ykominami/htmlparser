@@ -1,5 +1,3 @@
-from typing import Dict
-
 from bs4.element import NavigableString
 from yklibpy.common.info import Info
 from yklibpy.common.util import Util
@@ -43,7 +41,7 @@ class AmazonSavedCartScraper(Scraper):
         """
         super().__init__(sequence)
 
-    def scrape(self, info: Info) -> Dict[str, Dict[str, str]]:
+    def scrape(self, info: Info) -> None:
         """Extract Udemy dashboard cards and convert them into records.
 
         Args:
@@ -107,7 +105,7 @@ class AmazonSavedCartScraper(Scraper):
         print(
             f"###############   amazonsavedcart scrape len( self.links_assoc )={len(self.links_assoc)}"
         )
-        return self.links_assoc
+        return None
 
     def add_assoc(self, work_info: WorkInfo) -> bool:
         Scraper._add_assoc(
