@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from yklibpy.common.info import Info
 from yklibpy.common.util import Util
@@ -25,7 +25,7 @@ class KUScraper(Scraper):
         super().__init__(sequence)
         self.links_assoc: dict[str, dict[str, Any]] = {}
 
-    def scrape(self, info: Info) -> Dict[str, Dict[str, Any]]:
+    def scrape(self, info: Info) -> None:
         # <div id="itemsList" class="a-section a-spacing-top-large">
         #   <ul id="listContainer" class="a-unordered-list a-nostyle a-vertical" role="list">
 
@@ -53,7 +53,7 @@ class KUScraper(Scraper):
                 # print(f"text={text}")
                 work_info = self.WorkInfo(url=url, title=title, sequence=self.sequence)
                 self.add_assoc(work_info)
-        return self.links_assoc
+        return None
 
     def add_assoc(self, work_info: WorkInfo) -> bool:
         Scraper._add_assoc(

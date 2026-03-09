@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, NamedTuple
 
 from yklibpy.common.util_yaml import UtilYaml
-from yklibpy.db import get_or_create_db
+from yklibpy.db import DbYaml, get_or_create_db
 from yklibpy.htmlparser import Preparex
 
 from htmlparser.subapp import Subapp
@@ -17,14 +17,30 @@ class ConfigFileInfo(NamedTuple):
 class Top:
     def __init__(self, parent_path: Path, assoc: dict[str, dict[str, Any]]):
         self.top_config = TopConfigDb(parent_path, assoc)
+        self.patterns: list[str] = []
+        self.db_file_path: Path
+        self.db_kind: str
+        self.db: DbYaml
         self.setup()
 
     def setup(self) -> None:
         self.patterns = self.top_config.get_patterns()
 
-        self.db_file_path = self.top_config.get_db_file_path()
-        self.db_kind = self.top_config.get_db_kind()
-        self.db = get_or_create_db(self.db_kind, self.db_file_path)
+        db_file_path = self.top_config.get_db_file_path()
+        if db_file_path is None:
+            raise ValueError("db_file is not set")
+
+        db_kind = self.top_config.get_db_kind()
+        if db_kind is None:
+            raise ValueError("db_kind is not set")
+
+        db = get_or_create_db(db_kind, str(db_file_path))
+        if db is None:
+            raise ValueError(f"unsupported db_kind={db_kind}")
+
+        self.db_file_path = db_file_path
+        self.db_kind = db_kind
+        self.db = db
 
     def db_loadx(self) -> None:
         tag  = 'tag:yaml.org,2002:python/object:htmlparser.amazonsavedcartscraper.WorkInfo'
@@ -32,7 +48,7 @@ class Top:
         tags = [tag, tag2]
         self.db.load(tags=tags)
 
-    def db_load(self, tags:list[Any]=[]) -> None:
+    def db_load(self, tags: list[str] | None = None) -> None:
         self.db.load(tags=tags)
 
     def save(self) -> None :

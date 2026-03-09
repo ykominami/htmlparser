@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import List
 from urllib.parse import parse_qs, urlparse
 
 from bs4.element import Tag
@@ -48,7 +48,7 @@ class UdemyScraper(Scraper):
         """
         super().__init__(sequence)
 
-    def scrape(self, info: Info) -> Dict[str, Dict[str, Any]]:
+    def scrape(self, info: Info) -> None:
         """Extract Udemy dashboard cards and convert them into records.
 
         Args:
@@ -99,7 +99,7 @@ class UdemyScraper(Scraper):
         print(
             f"###############   udemyscraper scrape len( self.links_assoc )={len(self.links_assoc)}"
         )
-        return self.links_assoc
+        return None
 
     def get_instructors(self, div_tag: Tag) -> List[str]:
         """Pull the instructor text from a course card.

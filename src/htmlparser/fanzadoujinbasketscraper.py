@@ -1,5 +1,3 @@
-from typing import Dict
-
 from yklibpy.common.info import Info
 from yklibpy.common.util import Util
 from yklibpy.htmlparser.htmlop import HtmlOp
@@ -210,7 +208,7 @@ class FanzaDoujinBasketScraper(Scraper):
         )
         return True
 
-    def scrape(self, info: Info) -> Dict[str, Dict[str, str]]:
+    def scrape(self, info: Info) -> None:
         print("FanzaDoujin scrape")
         soup = info.soup
         append_count = 0
@@ -249,4 +247,4 @@ class FanzaDoujinBasketScraper(Scraper):
         info.no_append_count = no_append_count
         self.append_count += append_count
         self.no_append_count += no_append_count
-        return self.links_assoc
+        return None
