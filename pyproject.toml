@@ -44,11 +44,7 @@ Homepage = "https://github.com/ykominami/htmlparser"
 Repository = "https://github.com/ykominami/htmlparser"
 
 [project.scripts]
-htmlparser = "htmlparser:amain"
-htmlparser_clear = "htmlparser:clearmain"
-htmlparser_count = "htmlparser:count"
-htmlparser_print_list_text = "htmlparser:print_list_text"
-htmlparser_prepare = "htmlparser:prepare"
+htmlparser = "htmlparser.clix:main"
 
 [tool.pytest.ini_options]
 addopts = "-ra -q"
