@@ -36,8 +36,5 @@ class TopConfigDb:
   def get_db_file_path(self) -> Path | None:
     return self.db_file_path
 
-  def get_db_file_name(self) -> str | None:
-    return self.db_file
-
   def get_db_kind(self) -> str | None:
     return self.db_kind

@@ -1,4 +1,4 @@
-from htmlparser.top import amain, clearmain, count, print_list_text, prepare
+from htmlparser.clix import Clix, main
 from htmlparser.topconfigdb import TopConfigDb
 from htmlparser.subapp import Subapp
 from htmlparser.amazonsavedcartscraper import AmazonSavedCartScraper
@@ -23,14 +23,11 @@ __all__ = [
     "KUScraper",
     "Scraper",
     "UdemyScraper",
-    "amain",
-    "clearmain",
-    "count",
-    "print_list_text",
-    "prepare",
-    "TopConfigDb"
+    "TopConfigDb",
+    "Clix",
+    "main",
 ]
 
 if __name__ == "__main__":
-    amain()
+    raise SystemExit(main())
 
