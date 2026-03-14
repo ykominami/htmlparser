@@ -1,0 +1,1 @@
+'tag:yaml.org,2002:python/object:yklibpy.htmlparser.amazonsavedcartscraper.WorkInfo'
