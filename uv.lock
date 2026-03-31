@@ -1061,7 +1061,7 @@ wheels = [
 
 [[package]]
 name = "yklibpy"
-version = "0.2.11"
+version = "0.2.13"
 source = { directory = "../yklibpy" }
 dependencies = [
     { name = "bs4" },

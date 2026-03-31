@@ -203,6 +203,9 @@ class FanzaDoujinBasketScraper(Scraper):
 
     def add_assoc(self, work_info: WorkInfo) -> bool:
         cid = Util.extract_cid(work_info.url)
+        print(f"add_assoc cid={cid}")
+        print(f"add_assoc work_info.sequence={work_info.sequence}")
+        print(f"add_assoc work_info.to_assoc()={work_info.to_assoc()}")
         Scraper._add_assoc(
             self.links_assoc, cid, work_info.sequence, work_info.to_assoc()
         )
@@ -247,4 +250,8 @@ class FanzaDoujinBasketScraper(Scraper):
         info.no_append_count = no_append_count
         self.append_count += append_count
         self.no_append_count += no_append_count
+        print(f"info.append_count={info.append_count}")
+        print(f"info.no_append_count={info.no_append_count}")
+        print(f"self.append_count={self.append_count}")
+        print(f"self.no_append_count={self.no_append_count}")
         return None
